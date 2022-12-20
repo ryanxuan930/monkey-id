@@ -4,6 +4,7 @@
     </IfModule>
 
     RewriteEngine On
+    RewriteBase "/monkeyid-server/"
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
