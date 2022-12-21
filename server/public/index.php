@@ -20,6 +20,13 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
     require $maintenance;
 }
 
+if (strpos($_SERVER['REQUEST_URI'],'index.php') !== FALSE )
+{
+    $new_uri = preg_replace('#index\.php\/?#', '', $_SERVER['REQUEST_URI']);
+    header('Location: '.$new_uri, TRUE, 301);
+    die();
+}
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
