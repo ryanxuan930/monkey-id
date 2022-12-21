@@ -10,6 +10,8 @@ use DateTime;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
+use Mail;
+use App\Mail\SendMail;
 date_default_timezone_set('Asia/Taipei');
 
 class UserController extends Controller
@@ -118,6 +120,11 @@ class UserController extends Controller
         $temp = $request->all();
         $temp['password'] = password_hash($request->all()['password'], PASSWORD_DEFAULT);
         User::insert($temp);
+        // mail
+        $status = Mail::to($account)->send(new SendMail('MonkeyID', 'MonkeyID註冊通知信', 'SignupEmail', ['name' => $temp['name']]));
+        if (!empty($status)) {
+            return response()->json(['message' => 'mail_send_success'], 200);
+        }
         return response()->json(['message'=>'done']);
     }
 
