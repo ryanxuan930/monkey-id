@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class EmailLog extends Model
 {
     use HasFactory;
+    protected $table = "email_log";
+    protected $primaryKey = "univ_id";
+    public $timestamps = false;
 }

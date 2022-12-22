@@ -16,6 +16,8 @@ use App\Http\Controllers\Auth\UserController;
 |
 */
 
+Route::get('/univ-list', [MainController::class, 'univList']);
+
 Route::group([
     'prefix' => 'auth'
 ], function () {

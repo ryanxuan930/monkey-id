@@ -44,3 +44,15 @@
     <div class="flex-grow min-h-[2em]"></div>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import VueRequest from '@/vue-request';
+
+export default defineComponent({
+  setup() {
+    const vr = new VueRequest();
+    return {};
+  },
+});
+</script>

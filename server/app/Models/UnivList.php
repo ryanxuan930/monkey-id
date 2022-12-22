@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class UnivList extends Model
 {
     use HasFactory;
+    protected $table = "univ_list";
+    protected $primaryKey = "univ_id";
+    protected $keyType = 'string';
+    public $timestamps = false;
 }
