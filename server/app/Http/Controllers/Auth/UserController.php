@@ -118,6 +118,7 @@ class UserController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $temp = $request->all();
+        $temp['u_id'] = hash('sha3-224', microtime(true));
         $temp['password'] = password_hash($request->all()['password'], PASSWORD_DEFAULT);
         User::insert($temp);
         // mail
