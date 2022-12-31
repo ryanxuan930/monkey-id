@@ -122,7 +122,7 @@ class UserController extends Controller
         $temp['password'] = password_hash($request->all()['password'], PASSWORD_DEFAULT);
         User::insert($temp);
         // mail
-        $status = Mail::to($account)->send(new SendMail('MonkeyID', 'MonkeyID註冊通知信', 'SignupEmail', ['name' => $temp['name']]));
+        $status = Mail::to($temp['account'])->send(new SendMail('MonkeyID', 'MonkeyID註冊通知信', 'SignupEmail', ['name' => $temp['name']]));
         if (!empty($status)) {
             return response()->json(['message' => 'mail_send_success'], 200);
         }
