@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 use Mail;
-use App\Mail\SendMail;
+use App\Mods\SendMail;
 date_default_timezone_set('Asia/Taipei');
 
 class UserController extends Controller
