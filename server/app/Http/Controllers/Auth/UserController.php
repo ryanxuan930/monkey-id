@@ -180,7 +180,8 @@ class UserController extends Controller
         }
         $temp = $request->all();
         $email = $temp['email'];
-        $domain = array_pop(explode('@', $email));
+        $data = explode('@', $email);
+        $domain = array_pop($data);
         $domainArray = explode('.', $domain);
         $domainLength = count($domainArray);
         $realDomain = $domainArray[$domainLength-3].'.'.$domainArray[$domainLength-2].'.'.$domainArray[$domainLength-1];
