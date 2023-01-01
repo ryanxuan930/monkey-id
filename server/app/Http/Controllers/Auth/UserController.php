@@ -192,7 +192,19 @@ class UserController extends Controller
             $verficationCode = random_int(100000, 999999);
             $ALPHABAT = ['A','B', 'C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
             $prefix = 'MK'.$ALPHABAT[random_int(0, 25)].$ALPHABAT[random_int(0, 25)];
+            // expire in
+            $expire = new DateTime();
+            $expire->modify('+5 min');
+            // mail
+            $status = Mail::to($email)->send(new SendMail('MonkeyID', 'MonkeyID信箱驗證碼', 'VerificationEmail', ['name' => $temp['name'], 'timestamp' => date("Y-m-d H:i:s"), 'prefix' => $prefix, 'verificationCode' => $verficationCode]));
+            if (empty($status)) {
+                return response()->json(['status' => 'E02']);
+            }
+            // mail log
+            EmailLog::insert(['sent_to' => $email, 'pin_code' => $verficationCode, 'prefix' => $prefix, 'valid_until' => $expire]);
+            return response()->json(['status' => 'A01', 'prefix' => $prefix], 200);
+        } else {
+            return response()->json(['status' => 'E01'], 200);
         }
-        return response()->json(['prefix' => $prefix, 'verficationCode' => $verficationCode], 200);
     }
 }
