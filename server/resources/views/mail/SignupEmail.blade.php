@@ -8,7 +8,7 @@
                 親愛的 {{$variables['name']}}：<br>
                 <br>
                 您已成功註冊MonkeyID<br>
-                帳號為：{{$variables['account']}}<br>
+                您的帳號：{{$variables['account']}}<br>
                 註冊時間：{{$variables['timestamp']}}<br>
                 <br>
                 順頌時祺<br>
