@@ -195,8 +195,9 @@ class UserController extends Controller
             // expire in
             $expire = new DateTime();
             $expire->modify('+5 min');
+            $user = auth()->user();
             // mail
-            $status = Mail::to($email)->send(new SendMail('MonkeyID', 'MonkeyID信箱驗證碼', 'VerificationEmail', ['name' => $temp['name'], 'timestamp' => date("Y-m-d H:i:s"), 'prefix' => $prefix, 'verificationCode' => $verficationCode]));
+            $status = Mail::to($email)->send(new SendMail('MonkeyID', 'MonkeyID信箱驗證碼', 'VerificationEmail', ['account' => $user->account, 'name' => $user->name, 'timestamp' => date("Y-m-d H:i:s"), 'prefix' => $prefix, 'verificationCode' => $verficationCode]));
             if (empty($status)) {
                 return response()->json(['status' => 'E02']);
             }
