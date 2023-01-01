@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 use App\Models\UnivList;
+use App\Models\EmailLog;
 use Mail;
 use App\Mods\SendMail;
 date_default_timezone_set('Asia/Taipei');
@@ -187,6 +188,11 @@ class UserController extends Controller
         $domainLength = count($domainArray);
         $realDomain = $domainArray[$domainLength-3].'.'.$domainArray[$domainLength-2].'.'.$domainArray[$domainLength-1];
         $find = UnivList::where('domain', $realDomain)->count();
-        return response()->json(['status' => $find], 200);
+        if ($find) {
+            $verficationCode = random_int(100000, 999999);
+            $ALPHABAT = ['A','B', 'C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+            $prefix = 'MK'.$ALPHABAT[random_int(0, 25)].$ALPHABAT[random_int(0, 25)];
+        }
+        return response()->json(['prefix' => $prefix, 'verficationCode' => $verficationCode], 200);
     }
 }
