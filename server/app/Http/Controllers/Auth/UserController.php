@@ -178,8 +178,8 @@ class UserController extends Controller
             }
             return response()->json($validator->errors(), 400);
         }
-        $email = $request->all()['email'];
-        $domain = array_pop(explode('@', $email));
+        $temp = $request->all();
+        $domain = array_pop(explode('@', $temp['email']));
         $domainArray = explode('.', $domain);
         $domainLength = count($domainArray);
         $realDomain = $domainArray[$domainLength-3].'.'.$domainArray[$domainLength-2].'.'.$domainArray[$domainLength-1];
