@@ -162,4 +162,27 @@ class UserController extends Controller
             return response()->json(['message'=>false]);
         }
     }
+
+    // verify
+    // email
+    public function snedVerifyMail(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'email' => 'required|email:rfc',
+        ]);
+        if ($validator->fails()) {
+            $failedRules = $validator->failed();
+            if (isset($failedRules['email']['Required'])) {
+                return response()->json(['status' => 'U07'], 200);
+            } else if (isset($failedRules['email']['Email'])) {
+                return response()->json(['status' => 'U01'], 200);
+            }
+            return response()->json($validator->errors(), 400);
+        }
+        $email = $request->all()['email'];
+        $domain = array_pop(explode('@', $email));
+        $domainArray = explode('.', $domain);
+        $domainLength = count($domainArray);
+        $realDomain = $domainArray[$domainLength-3].'.'.$domainArray[$domainLength-2].'.'.$domainArray[$domainLength-1];
+        return response()->json(['message' => $realDomain]);
+    }
 }
