@@ -8,6 +8,7 @@
                 親愛的 {{$variables['name']}}：<br>
                 <br>
                 這是來自MonkeyID的身份驗證信<br>
+                您的帳號：{{$variables['account]}}<br>
                 發送時間：{{$variables['timestamp']}}<br>
                 <div style="font-size: 12pt; padding: 10px; margin: 10px 0; background-color:rgb(251, 232, 209)">驗證碼：{{$variables['prefix']}}-{{$variables['verificationCode']}}</div>
                 有效期間為 5 分鐘<br>
