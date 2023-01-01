@@ -43,5 +43,10 @@ Route::group([
         Route::post('/logout', [UserController::class, 'logout']);
         Route::post('/register', [UserController::class, 'register']);
         Route::get('/exist/{account}', [UserController::class, 'exist']);
+        Route::group([
+            'prefix' => '/verify'
+        ], function () {
+            Route::post('/email', [UserController::class, 'sendVerifyMail']);
+        });
     });
 });
