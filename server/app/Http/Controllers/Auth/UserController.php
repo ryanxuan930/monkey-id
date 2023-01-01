@@ -165,7 +165,7 @@ class UserController extends Controller
 
     // verify
     // email
-    public function snedVerifyMail(Request $request) {
+    public function sendVerifyMail(Request $request) {
         $validator = Validator::make($request->all(),[
             'email' => 'required|email:rfc',
         ]);
