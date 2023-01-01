@@ -10,6 +10,7 @@ use DateTime;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
+use App\Models\UnivList;
 use Mail;
 use App\Mods\SendMail;
 date_default_timezone_set('Asia/Taipei');
@@ -185,6 +186,7 @@ class UserController extends Controller
         $domainArray = explode('.', $domain);
         $domainLength = count($domainArray);
         $realDomain = $domainArray[$domainLength-3].'.'.$domainArray[$domainLength-2].'.'.$domainArray[$domainLength-1];
-        return response()->json(['message' => $realDomain]);
+        $find = UnivList::where('domain', $realDomain)->count();
+        return response()->json(['status' => $find], 200);
     }
 }
