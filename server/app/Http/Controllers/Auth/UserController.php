@@ -331,7 +331,7 @@ class UserController extends Controller
         if ($request->hasFile('image')) {
             $user = auth()->user();
             if ($user->file) {
-                Storage::disk('public')->delete($user->file);
+                Storage::disk('public/images')->delete($user->file);
             } 
             $path = $request->file('image')->store('images', 'public');
             User::where('u_id', $user->u_id)->update(['file' => $path]);
