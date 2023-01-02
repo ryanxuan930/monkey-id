@@ -51,5 +51,6 @@ Route::group([
         });
         Route::post('/reset', [UserController::class, 'reset']);
         Route::post('/reset/password/{account}/{token}', [UserController::class, 'resetPassword']);
+        Route::post('/upload', [UserController::class, 'upload']);
     });
 });
