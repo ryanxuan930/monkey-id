@@ -323,4 +323,17 @@ class UserController extends Controller
             return response()->json(['status'=>'E03', 'message'=> '驗證失敗']);
         }
     }
+
+    // file handler
+    function upload(Request $request)
+    {
+        if ($request->hasFile('image')) {
+            $user = auth()->user();
+            if ($user->file) {
+                Storage::disk('public')->delete($user->file);
+            } 
+            $path = $request->file('image')->store('images', 'public');
+            User::where('u_id', $user->u_id)->update(['file' => $path]);
+        }
+    }
 }
