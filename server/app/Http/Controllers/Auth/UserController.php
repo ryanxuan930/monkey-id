@@ -301,6 +301,7 @@ class UserController extends Controller
     }
 
     public function resetPassword(Request $request, $account, $token) {
+        ResetPassword::whereDate('valid_until', '<', date('Y-m-d'))->whereTime('valid_until', '<', date('H:i:s'))->update(['used' => 1]);
         $query = ResetPassword::where('account', $account)->where('token', $token)->whereDate('valid_until', '>=', date('Y-m-d'))->whereTime('valid_until', '>=', date('H:i:s'))->where('used', 0);
         if ($query->count() > 0) {
             $validator = Validator::make($request->all(),[
