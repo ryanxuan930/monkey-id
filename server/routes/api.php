@@ -50,5 +50,6 @@ Route::group([
             Route::post('/email/code', [UserController::class, 'codeVerify']);
         });
         Route::post('/reset', [UserController::class, 'reset']);
+        Route::post('/reset/{account}/{token}', [UserController::class, 'resetPassword']);
     });
 });
