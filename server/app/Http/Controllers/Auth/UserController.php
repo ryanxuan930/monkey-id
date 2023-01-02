@@ -189,8 +189,10 @@ class UserController extends Controller
         }
         $temp = $request->all();
         $email = $temp['email'];
+        /*
         $time = date("Y-m-d H:i:s");
         EmailLog::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
+        */
         $data = explode('@', $email);
         $domain = array_pop($data);
         if (!str_contains($domain, 'edu')) {
@@ -246,10 +248,8 @@ class UserController extends Controller
         }
         $temp = $request->all();
         $user = auth()->user();
-        $time = date("Y-m-d H:i:s");
-        EmailLog::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
         $query = EmailLog::where('sent_to', $user->school_email)->where('prefix', $temp['prefix'])->where('pin_code', $temp['code'])->whereDate('valid_until', '>=', $time)->whereTime('valid_until', '>=', $time)->where('used', 0);
-        if ($query == 0) {
+        if ($query->count() == 0) {
             return response()->json(['status' => 'E03', 'message' => '驗證碼錯誤或過期'], 200);
         }
         $find = $query->first();
@@ -302,11 +302,26 @@ class UserController extends Controller
         return response()->json(['status' => 'A01'], 200);
     }
 
-    public function ResetPassword(Request $request, $account, $token) {
-        $time = new DateTime();
+    public function resetPassword(Request $request, $account, $token) {
+        $time = date("Y-m-d H:i:s");
         $query = ResetPassword::where('account', $account)->where('token', $token)->whereDate('valid_until', '>=', $time)->whereTime('valid_until', '>=', $time)->where('used', 0);
         if ($query->count() > 0) {
-
+            $validator = Validator::make($request->all(),[
+                'password' => 'required',
+            ]);
+            if ($validator->fails()) {
+                $failedRules = $validator->failed();
+                if (isset($failedRules['password']['Required'])) {
+                    return response()->json(['status' => 'U06'], 200);
+                }
+                return response()->json($validator->errors(), 400);
+            }
+            $temp = $request->all();
+            $temp['password'] = password_hash($request->all()['password'], PASSWORD_DEFAULT);
+            User::where('account',$account)->update($temp);
+            return response()->json(['status'=>'A01']);
+        } else {
+            return response()->json(['status'=>'E03', 'message'=> '驗證失敗']);
         }
     }
 }
