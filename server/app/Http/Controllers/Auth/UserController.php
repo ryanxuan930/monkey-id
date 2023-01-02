@@ -15,6 +15,7 @@ use App\Models\EmailLog;
 use App\Models\ResetPassword;
 use Mail;
 use App\Mods\SendMail;
+use Illuminate\Support\Facades\Storage;
 date_default_timezone_set('Asia/Taipei');
 
 class UserController extends Controller
