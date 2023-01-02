@@ -12,6 +12,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 use App\Models\UnivList;
 use App\Models\EmailLog;
+use App\Models\ResetPassword;
 use Mail;
 use App\Mods\SendMail;
 date_default_timezone_set('Asia/Taipei');
@@ -21,18 +22,18 @@ class UserController extends Controller
     // construct
     public function __construct()
     {
-        $this->middleware('auth:user',['except'=>['login','register','exist']]);
+        $this->middleware('auth:user',['except'=>['login','register','exist', 'reset']]);
     }
 
     // token function
     private function createNewToken($token, $userData = NULL)
     {
-        $exp_time = new DateTime();
-        $exp_time->modify('+1 day');
+        $expTime = new DateTime();
+        $expTime->modify('+1 day');
         return [
             'token' => $token,
             'type' => 'bearer',
-            'expired' => $exp_time->format('Y-m-d H:i:s'),
+            'expired' => $expTime->format('Y-m-d H:i:s'),
             'user' => is_null($userData) ? auth('user')->user() : $userData,
         ];
     }
@@ -129,7 +130,7 @@ class UserController extends Controller
         $temp['password'] = password_hash($request->all()['password'], PASSWORD_DEFAULT);
         User::insert($temp);
         // mail
-        $status = Mail::to($temp['account'])->send(new SendMail('MonkeyID', 'MonkeyID註冊通知信', 'SignupEmail', ['account' => $temp['account'], 'name' => $temp['name'], 'timestamp' => date("Y-m-d H:i:s")]));
+        $status = Mail::to($temp['account'])->send(new SendMail('MonkeyID', 'MonkeyID註冊通知信', 'SignupEmail', ['account' => $temp['account'], 'name' => $temp['name'], 'timestamp' => date('Y-m-d H:i:s')]));
         if (empty($status)) {
             return response()->json(['status' => 'E02']);
         }
@@ -255,5 +256,45 @@ class UserController extends Controller
         EmailLog::where('id', $find->id)->update(['used' => 1]);
         User::where('u_id', $user->u_id)->update(['verification' => 9, 'valid_until' => $time]);
         return response()->json(['status' => 'A04'], 200);
+    }
+    // reset password
+    public function reset(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'account' => 'required|exists:user,account',
+        ]);
+        if ($validator->fails()) {
+            $failedRules = $validator->failed();
+            if (isset($failedRules['account']['Required'])) {
+                return response()->json(['status' => 'U03', 'message' => '請輸入帳號'], 200);
+            } else if (isset($failedRules['account']['Exists'])) {
+                return response()->json(['status' => "U02", 'message' => '帳號尚未註冊'], 200);
+            }
+            return response()->json($validator->errors(), 400);
+        }
+        $temp = $request->all();
+        // generate seed
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        $charactersLength = strlen($characters);
+        for ($i = 0; $i < 10; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        $seed = microtime(true).$randomString;
+        $token = hash('sha3-256', $seed);
+        // mail
+        $status = Mail::to($temp['email'])->send(new SendMail('MonkeyID', 'MonkeyID重設密碼', 'ResetPassword', ['account' => $temp['email'], 'timestamp' => date("Y-m-d H:i:s"), 'token' => $token]));
+        if (empty($status)) {
+            return response()->json(['status' => 'E02', 'message' => 'Email發送失敗']);
+        }
+        $expire = new DateTime();
+            $expire->modify('+5 min');
+        ResetPassword::insert([
+            'account' => $temp['email'],
+            'token' => $token,
+            'create_at' => date('Y-m-d H:i:s'),
+            'valid_until' => $expire
+        ]);
+        return response()->json(['status' => 'A01'], 200);
     }
 }

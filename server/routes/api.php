@@ -49,5 +49,6 @@ Route::group([
             Route::post('/email', [UserController::class, 'sendVerifyMail']);
             Route::post('/email/code', [UserController::class, 'codeVerify']);
         });
+        Route::post('/reset', [UserController::class, 'reset']);
     });
 });

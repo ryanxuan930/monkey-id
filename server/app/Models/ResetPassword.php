@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EmailLog extends Model
+class ResetPassword extends Model
 {
     use HasFactory;
-    protected $table = "email_log";
+    protected $table = "reset_password";
     protected $primaryKey = "id";
     public $timestamps = false;
 }
