@@ -316,6 +316,7 @@ class UserController extends Controller
             $temp = $request->all();
             $temp['password'] = password_hash($request->all()['password'], PASSWORD_DEFAULT);
             User::where('account',$account)->update($temp);
+            ResetPassword::where('id', $query->first()->id)->update(['used' => 1]);
             return response()->json(['status'=>'A01']);
         } else {
             return response()->json(['status'=>'E03', 'message'=> '驗證失敗']);
