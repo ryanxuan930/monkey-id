@@ -189,10 +189,7 @@ class UserController extends Controller
         }
         $temp = $request->all();
         $email = $temp['email'];
-        /*
-        $time = date("Y-m-d H:i:s");
-        EmailLog::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
-        */
+        EmailLog::whereDate('valid_until', '<', date('Y-m-d'))->whereTime('valid_until', '<', date('H:i:s'))->update(['used' => 1]);
         $data = explode('@', $email);
         $domain = array_pop($data);
         if (!str_contains($domain, 'edu')) {
@@ -248,8 +245,8 @@ class UserController extends Controller
         }
         $temp = $request->all();
         $user = auth()->user();
-        $time = date('Y-m-d H:i:s');
-        $query = EmailLog::where('sent_to', $user->school_email)->where('prefix', $temp['prefix'])->where('pin_code', $temp['code'])->whereDate('valid_until', '>=', $time)->whereTime('valid_until', '>=', $time)->where('used', 0);
+        EmailLog::whereDate('valid_until', '<', date('Y-m-d'))->whereTime('valid_until', '<', date('H:i:s'))->update(['used' => 1]);
+        $query = EmailLog::where('sent_to', $user->school_email)->where('prefix', $temp['prefix'])->where('pin_code', $temp['code'])->whereDate('valid_until', '>=', date('Y-m-d'))->whereTime('valid_until', '>=', date('H:i:s'))->where('used', 0);
         if ($query->count() == 0) {
             return response()->json(['status' => 'E03', 'message' => '驗證碼錯誤或過期'], 200);
         }
@@ -275,8 +272,7 @@ class UserController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $temp = $request->all();
-        $time = date("Y-m-d H:i:s");
-        ResetPassword::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
+        ResetPassword::whereDate('valid_until', '<', date('Y-m-d'))->whereTime('valid_until', '<', date('H:i:s'))->update(['used' => 1]);
         // generate seed
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $randomString = '';
@@ -304,8 +300,7 @@ class UserController extends Controller
     }
 
     public function resetPassword(Request $request, $account, $token) {
-        $time = date("Y-m-d H:i:s");
-        $query = ResetPassword::where('account', $account)->where('token', $token)->whereDate('valid_until', '>=', $time)->whereTime('valid_until', '>=', $time)->where('used', 0);
+        $query = ResetPassword::where('account', $account)->where('token', $token)->whereDate('valid_until', '>=', date('Y-m-d'))->whereTime('valid_until', '>=', date('H:i:s'))->where('used', 0);
         if ($query->count() > 0) {
             $validator = Validator::make($request->all(),[
                 'password' => 'required',
