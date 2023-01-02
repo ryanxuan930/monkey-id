@@ -327,12 +327,13 @@ class UserController extends Controller
     // file handler
     function upload(Request $request)
     {
-        if ($request->hasFile('file')) {
+        return response()->json(['status'=>$request->image]);
+        if ($request->hasFile('image')) {
             $user = auth()->user();
             if ($user->file) {
                 Storage::disk('public')->delete($user->file);
             } 
-            $path = $request->file('file')->store('images', 'public');
+            $path = $request->file('image')->store('images', 'public');
             User::where('u_id', $user->u_id)->update(['file' => $path]);
         }
         return response()->json(['status'=>$request]);
