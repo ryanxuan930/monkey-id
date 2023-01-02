@@ -189,7 +189,7 @@ class UserController extends Controller
         }
         $temp = $request->all();
         $email = $temp['email'];
-        $time = new DateTime();
+        $time = date("Y-m-d H:i:s");
         EmailLog::whereDate('valid_until', '>=', $time)->whereTime('valid_until', '>=', $time)->update(['used' => 1]);
         return response()->json(['status' => $time, 'message' => EmailLog::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->count()], 200);
         $data = explode('@', $email);
@@ -247,7 +247,7 @@ class UserController extends Controller
         }
         $temp = $request->all();
         $user = auth()->user();
-        $time = new DateTime();
+        $time = date("Y-m-d H:i:s");
         EmailLog::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
         $find = EmailLog::where('sent_to', $user->school_email)->where('prefix', $temp['prefix'])->where('pin_code', $temp['code'])->whereDate('valid_until', '>=', $time)->whereTime('valid_until', '>=', $time)->where('used', 0)->first();
         if ($find == null) {
@@ -274,7 +274,7 @@ class UserController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $temp = $request->all();
-        $time = new DateTime();
+        $time = date("Y-m-d H:i:s");
         ResetPassword::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
         // generate seed
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -292,7 +292,7 @@ class UserController extends Controller
             return response()->json(['status' => 'E02', 'message' => 'Email發送失敗']);
         }
         $expire = new DateTime();
-            $expire->modify('+5 min');
+        $expire->modify('+5 min');
         ResetPassword::insert([
             'account' => $temp['account'],
             'token' => $token,
