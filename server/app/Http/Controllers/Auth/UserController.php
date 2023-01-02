@@ -250,7 +250,7 @@ class UserController extends Controller
         }
         $time->modify('+6 months');
         EmailLog::where('id', $find->id)->update(['used' => 0]);
-        User::where('u_id', $user->u_id)->update(['verification' => 2, 'valid_until' => $time]);
+        User::where('u_id', $user->u_id)->update(['verification' => 9, 'valid_until' => $time]);
         return response()->json(['status' => 'A04'], 200);
     }
 }
