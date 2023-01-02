@@ -190,6 +190,9 @@ class UserController extends Controller
         $email = $temp['email'];
         $data = explode('@', $email);
         $domain = array_pop($data);
+        if (!str_contains($domain, 'edu')) {
+            return response()->json(['status' => 'U01', 'message' => '請輸入您學校的Email信箱'], 200);
+        }
         $domainArray = explode('.', $domain);
         $domainLength = count($domainArray);
         $realDomain = $domainArray[$domainLength-3].'.'.$domainArray[$domainLength-2].'.'.$domainArray[$domainLength-1];
