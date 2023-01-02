@@ -189,6 +189,8 @@ class UserController extends Controller
         }
         $temp = $request->all();
         $email = $temp['email'];
+        $time = new DateTime();
+        EmailLog::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
         $data = explode('@', $email);
         $domain = array_pop($data);
         if (!str_contains($domain, 'edu')) {
@@ -221,8 +223,6 @@ class UserController extends Controller
             EmailLog::insert(['sent_to' => $email, 'pin_code' => $verficationCode, 'prefix' => $prefix, 'valid_until' => $expire]);
             // update user status
             User::where('u_id', $user->u_id)->update(['verify_type' => 0, 'school_email' => $email, 'verification' => 1]);
-            $time = new DateTime();
-            EmailLog::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
             return response()->json(['status' => 'A01', 'prefix' => $prefix], 200);
         } else {
             return response()->json(['status' => 'E01', 'message' => '驗證碼發送失敗'], 200);
@@ -273,6 +273,8 @@ class UserController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $temp = $request->all();
+        $time = new DateTime();
+        ResetPassword::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
         // generate seed
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $randomString = '';
@@ -283,7 +285,8 @@ class UserController extends Controller
         $seed = microtime(true).$randomString;
         $token = hash('sha3-256', $seed);
         // mail
-        $status = Mail::to($temp['account'])->send(new SendMail('MonkeyID', 'MonkeyID重設密碼', 'ResetPassword', ['account' => $temp['account'], 'timestamp' => date("Y-m-d H:i:s"), 'url' => $token]));
+        $url = 'http://localhost:8080/login/reset/verify?account='.$temp['account'].'&token='.$token;
+        $status = Mail::to($temp['account'])->send(new SendMail('MonkeyID', 'MonkeyID重設密碼', 'ResetPassword', ['account' => $temp['account'], 'timestamp' => date("Y-m-d H:i:s"), 'url' => $url]));
         if (empty($status)) {
             return response()->json(['status' => 'E02', 'message' => 'Email發送失敗']);
         }
@@ -296,5 +299,13 @@ class UserController extends Controller
             'valid_until' => $expire
         ]);
         return response()->json(['status' => 'A01'], 200);
+    }
+
+    public function ResetPassword(Request $request, $account, $token) {
+        $time = new DateTime();
+        $query = ResetPassword::where('account', $account)->where('token', $token)->whereDate('valid_until', '>=', $time)->whereTime('valid_until', '>=', $time)->where('used', 0);
+        if ($query->count() > 0) {
+            
+        }
     }
 }
