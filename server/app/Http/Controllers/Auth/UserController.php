@@ -47,11 +47,11 @@ class UserController extends Controller
         if ($validator->fails()) {
             $failedRules = $validator->failed();
             if (isset($failedRules['account']['Required'])) {
-                return response()->json(['status' => 'U03'], 200);
+                return response()->json(['status' => 'U03', 'message' => '請輸入帳號'], 200);
             } else if (isset($failedRules['password']['Required'])) {
-                return response()->json(['status' => 'U06'], 200);
+                return response()->json(['status' => 'U06', 'message' => '請輸入密碼'], 200);
             } else if (isset($failedRules['account']['Exists'])) {
-                return response()->json(['status' => "U02"], 200);
+                return response()->json(['status' => "U02", 'message' => '帳號尚未註冊'], 200);
             }
             return response()->json($validator->errors(), 400);
         }
@@ -69,7 +69,7 @@ class UserController extends Controller
             $token = JWTAuth::fromUser($user);
             return response()->json(['status' => 'A02','data'=>$this->createNewToken($token, $user)], 200);
         }else{
-            return response()->json(['status' => 'U05'], 200);
+            return response()->json(['status' => 'U05', 'message' => '請輸入正確的帳號與密碼'], 200);
         }
     }
 
