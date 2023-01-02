@@ -335,5 +335,6 @@ class UserController extends Controller
             $path = $request->file('image')->store('images', 'public');
             User::where('u_id', $user->u_id)->update(['file' => $path]);
         }
+        return response()->json(['status'=>$path]);
     }
 }
