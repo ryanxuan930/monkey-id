@@ -248,6 +248,7 @@ class UserController extends Controller
         }
         $temp = $request->all();
         $user = auth()->user();
+        $time = date('Y-m-d H:i:s');
         $query = EmailLog::where('sent_to', $user->school_email)->where('prefix', $temp['prefix'])->where('pin_code', $temp['code'])->whereDate('valid_until', '>=', $time)->whereTime('valid_until', '>=', $time)->where('used', 0);
         if ($query->count() == 0) {
             return response()->json(['status' => 'E03', 'message' => '驗證碼錯誤或過期'], 200);
