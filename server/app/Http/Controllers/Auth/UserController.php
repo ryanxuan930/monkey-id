@@ -333,9 +333,10 @@ class UserController extends Controller
             if ($user->file) {
                 Storage::disk('public')->delete($user->file);
             } 
-            $path = $request->file('image')->store('images', 'public');
+            $path = $request->file('image')->store($user->u_id, 'public');
             User::where('u_id', $user->u_id)->update(['file' => $path]);
         }
+
         return response()->json(['status'=>'A05']);
     }
 }
