@@ -283,7 +283,7 @@ class UserController extends Controller
         $seed = microtime(true).$randomString;
         $token = hash('sha3-256', $seed);
         // mail
-        $status = Mail::to($temp['account'])->send(new SendMail('MonkeyID', 'MonkeyID重設密碼', 'ResetPassword', ['account' => $temp['account'], 'timestamp' => date("Y-m-d H:i:s"), 'token' => $token]));
+        $status = Mail::to($temp['account'])->send(new SendMail('MonkeyID', 'MonkeyID重設密碼', 'ResetPassword', ['account' => $temp['account'], 'timestamp' => date("Y-m-d H:i:s"), 'url' => $token]));
         if (empty($status)) {
             return response()->json(['status' => 'E02', 'message' => 'Email發送失敗']);
         }
