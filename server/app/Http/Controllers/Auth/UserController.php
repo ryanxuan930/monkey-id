@@ -327,7 +327,6 @@ class UserController extends Controller
     // file handler
     function upload(Request $request)
     {
-        return response()->json(['status'=>$request->file('file')]);
         if ($request->hasFile('file')) {
             $user = auth()->user();
             if ($user->file) {
