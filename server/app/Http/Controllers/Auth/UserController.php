@@ -220,6 +220,8 @@ class UserController extends Controller
             EmailLog::insert(['sent_to' => $email, 'pin_code' => $verficationCode, 'prefix' => $prefix, 'valid_until' => $expire]);
             // update user status
             User::where('u_id', $user->u_id)->update(['verify_type' => 0, 'school_email' => $email, 'verification' => 1]);
+            $time = new DateTime();
+            EmailLog::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
             return response()->json(['status' => 'A01', 'prefix' => $prefix], 200);
         } else {
             return response()->json(['status' => 'E01', 'message' => '驗證碼發送失敗'], 200);
@@ -243,8 +245,6 @@ class UserController extends Controller
         }
         $temp = $request->all();
         $user = auth()->user();
-        $time = new DateTime();
-        EmailLog::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
         $find = EmailLog::where('sent_to', $user->school_email)->where('prefix', $temp['prefix'])->where('pin_code', $temp['code'])->whereDate('valid_until', '>=', $time)->whereTime('valid_until', '>=', $time)->where('used', 0)->first();
         if ($find == null) {
             return response()->json(['status' => 'E03', 'message' => '驗證碼錯誤或過期'], 200);
