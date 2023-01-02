@@ -251,6 +251,7 @@ class UserController extends Controller
             return response()->json(['status' => 'E03', 'message' => '驗證碼錯誤或過期'], 200);
         }
         $find = $query->first();
+        $time = new DateTime();
         $time->modify('+6 months');
         EmailLog::where('id', $find->id)->update(['used' => 1]);
         User::where('u_id', $user->u_id)->update(['verification' => 9, 'valid_until' => $time]);
