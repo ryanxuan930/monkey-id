@@ -190,8 +190,7 @@ class UserController extends Controller
         $temp = $request->all();
         $email = $temp['email'];
         $time = date("Y-m-d H:i:s");
-        EmailLog::whereDate('valid_until', '>=', $time)->whereTime('valid_until', '>=', $time)->update(['used' => 1]);
-        return response()->json(['status' => $time, 'message' => EmailLog::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->count()], 200);
+        EmailLog::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
         $data = explode('@', $email);
         $domain = array_pop($data);
         if (!str_contains($domain, 'edu')) {
