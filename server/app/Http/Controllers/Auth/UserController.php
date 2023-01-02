@@ -244,12 +244,13 @@ class UserController extends Controller
         $temp = $request->all();
         $user = auth()->user();
         $time = new DateTime();
+        EmailLog::whereDate('valid_until', '<', $time)->whereTime('valid_until', '<', $time)->update(['used' => 1]);
         $find = EmailLog::where('sent_to', $user->school_email)->where('prefix', $temp['prefix'])->where('pin_code', $temp['code'])->whereDate('valid_until', '>=', $time)->whereTime('valid_until', '>=', $time)->where('used', 0)->first();
         if ($find == null) {
-            return response()->json(['status' => 'E03', 'message' => '驗證碼錯誤'], 200);
+            return response()->json(['status' => 'E03', 'message' => '驗證碼錯誤或過期'], 200);
         }
         $time->modify('+6 months');
-        EmailLog::where('id', $find->id)->update(['used' => 0]);
+        EmailLog::where('id', $find->id)->update(['used' => 1]);
         User::where('u_id', $user->u_id)->update(['verification' => 9, 'valid_until' => $time]);
         return response()->json(['status' => 'A04'], 200);
     }
