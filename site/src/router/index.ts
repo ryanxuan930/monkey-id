@@ -7,6 +7,18 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'home',
     component: HomeView,
+    children: [
+      {
+        path: '/',
+        name: 'homePage',
+        component: () => import('../views/home/HomePage.vue'),
+      },
+      {
+        path: 'verify',
+        name: 'verifyPage',
+        component: () => import('../views/home/VerifyPage.vue'),
+      },
+    ],
   },
   {
     path: '/login',
@@ -23,12 +35,17 @@ const routes: Array<RouteRecordRaw> = [
         name: 'signupPage',
         component: () => import('../views/login/SignupPage.vue'),
       },
+      {
+        path: 'done',
+        name: 'donePage',
+        component: () => import('../views/login/DonePage.vue'),
+      },
+      {
+        path: 'reset',
+        name: 'resetPage',
+        component: () => import('../views/login/ResetPage.vue'),
+      },
     ],
-  },
-  {
-    path: '/verify',
-    name: 'verifyPage',
-    component: () => import('../views/VerifyView.vue'),
   },
   {
     path: '/admin',

@@ -2,6 +2,35 @@
   <router-view/>
 </template>
 
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { useStore } from 'vuex';
+
+export default defineComponent({
+  setup() {
+    const store = useStore();
+    try {
+      document.cookie = 'accept=true';
+      localStorage.setItem('test', 'test');
+      localStorage.removeItem('test');
+    } catch (e) {
+      alert('本網站必須使用Cookie，您必須要啟用Cookie才能使用本網站');
+      console.log(e);
+    }
+    try {
+      if (localStorage.getItem('monkeyIdTemp')) {
+        const temp = JSON.parse(localStorage.monkeyIdTemp);
+        store.commit('setAuthToken', temp.token);
+        store.commit('setLoginStatus', temp.login);
+        store.commit('setUserInfo', temp.user);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+});
+</script>
+
 <style lang="scss">
 #app {
   font-family: 'Noto Sans TC', sans-serif;

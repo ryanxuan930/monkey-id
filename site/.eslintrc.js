@@ -24,6 +24,7 @@ module.exports = {
     ],
     'vuejs-accessibility/label-has-for': 'off',
     'no-plusplus': 'off',
+    camelcase: 'off',
   },
 
 };
