@@ -77,6 +77,11 @@ class UserController extends Controller
     public function info()
     {
         $user = auth()->user();
+        $validTime = new DateTime($user->valid_until);
+        $current = new DateTime;
+        if ($validTime < $current) {
+            User::where('u_id',$user->u_id)->update(['verification' => 8]);
+        }
         $result = User::leftJoin('univ_list', 'univ_list.univ_id', '=', 'user.univ_id')->select('user.*', 'univ_list.univ_id', 'univ_list.univ_name_ch_full', 'univ_list.univ_name_ch', 'univ_list.univ_name_en')->where('u_id',$user->u_id)->first();
         return response()->json($result);
     }
@@ -167,7 +172,8 @@ class UserController extends Controller
 
     // verify
     // email
-    public function sendVerifyMail(Request $request) {
+    public function sendVerifyMail(Request $request)
+    {
         $validator = Validator::make($request->all(),[
             'email' => 'required|email:rfc',
         ]);
@@ -176,7 +182,7 @@ class UserController extends Controller
             if (isset($failedRules['email']['Required'])) {
                 return response()->json(['status' => 'U07'], 200);
             } else if (isset($failedRules['email']['Email'])) {
-                return response()->json(['status' => 'U01'], 200);
+                return response()->json(['status' => 'U01', 'message' => 'Email格式不正確'], 200);
             }
             return response()->json($validator->errors(), 400);
         }
@@ -187,25 +193,61 @@ class UserController extends Controller
         $domainArray = explode('.', $domain);
         $domainLength = count($domainArray);
         $realDomain = $domainArray[$domainLength-3].'.'.$domainArray[$domainLength-2].'.'.$domainArray[$domainLength-1];
-        $find = UnivList::where('domain', $realDomain)->count();
+        $user = auth()->user();
+        $query = UnivList::where('domain', $realDomain);
+        $find = $query->count();
+        $univ = $query->first();
         if ($find) {
+            if ($univ->univ_id != $user->univ_id) {
+                return response()->json(['status' => 'E01', 'message' => '請輸入您學校的Email信箱']);
+            }
+            // generates verficiation code
             $verficationCode = random_int(100000, 999999);
             $ALPHABAT = ['A','B', 'C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-            $prefix = 'MK'.$ALPHABAT[random_int(0, 25)].$ALPHABAT[random_int(0, 25)];
-            // expire in
+            $prefix = $ALPHABAT[random_int(0, 25)].$ALPHABAT[random_int(0, 25)].$ALPHABAT[random_int(0, 25)].$ALPHABAT[random_int(0, 25)];
+            // expires in
             $expire = new DateTime();
             $expire->modify('+5 min');
-            $user = auth()->user();
             // mail
             $status = Mail::to($email)->send(new SendMail('MonkeyID', 'MonkeyID信箱驗證碼', 'VerificationEmail', ['account' => $user->account, 'name' => $user->name, 'timestamp' => date("Y-m-d H:i:s"), 'prefix' => $prefix, 'verificationCode' => $verficationCode]));
             if (empty($status)) {
-                return response()->json(['status' => 'E02']);
+                return response()->json(['status' => 'E02', 'message' => 'Email發送失敗']);
             }
             // mail log
             EmailLog::insert(['sent_to' => $email, 'pin_code' => $verficationCode, 'prefix' => $prefix, 'valid_until' => $expire]);
+            // update user status
+            User::where('u_id', $user->u_id)->update(['verify_type' => 0, 'school_email' => $email, 'verification' => 1]);
             return response()->json(['status' => 'A01', 'prefix' => $prefix], 200);
         } else {
-            return response()->json(['status' => 'E01'], 200);
+            return response()->json(['status' => 'E01', 'message' => '驗證碼發送失敗'], 200);
         }
+    }
+
+    public function codeVerify(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'code' => 'required',
+            'prefix' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $failedRules = $validator->failed();
+            if (isset($failedRules['code']['Required'])) {
+                return response()->json(['status' => 'U07'], 200);
+            }else if (isset($failedRules['prefix']['Required'])) {
+                return response()->json(['status' => 'U07'], 200);
+            }
+            return response()->json($validator->errors(), 400);
+        }
+        $temp = $request->all();
+        $user = auth()->user();
+        $time = new DateTime();
+        $find = EmailLog::where('sent_to', $user->school_email)->where('prefix', $temp['prefix'])->where('pin_code', $temp['code'])->whereDate('valid_until', '<=', $time)->whereTime('valid_until', '<=', $time)->where('used', 0)->first();
+        if ($find == null) {
+            return response()->json(['status' => 'E03', 'message' => '驗證碼錯誤'], 200);
+        }
+        $time->modify('+6 months');
+        EmailLog::where('id', $find->id)->update(['used' => 0]);
+        User::where('u_id', $user->u_id)->update(['verification' => 2, 'valid_until' => $time]);
+        return response()->json(['status' => 'A04'], 200);
     }
 }

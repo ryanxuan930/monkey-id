@@ -47,6 +47,7 @@ Route::group([
             'prefix' => '/verify'
         ], function () {
             Route::post('/email', [UserController::class, 'sendVerifyMail']);
+            Route::post('/email/verify', [UserController::class, 'codeVerify']);
         });
     });
 });
