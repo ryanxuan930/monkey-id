@@ -9,7 +9,7 @@
                 <br>
                 這是來自MonkeyID的密碼重設驗證信<br>
                 發送時間：{{$variables['timestamp']}}<br>
-                <div style="font-size: 12pt; padding: 10px; margin: 10px 0; background-color:rgb(251, 232, 209)">請點這個連結來重設您的密碼：{{$variables['url']}}</div>
+                <div style="font-size: 12pt; padding: 10px; margin: 10px 0; background-color:rgb(251, 232, 209)">請點這個連結來重設您的密碼：<a href="{{ $variables['url'] }}">{{$variables['url']}}</a></div>
                 有效期間為 5 分鐘<br>
                 <br>
                 順頌時祺<br>
