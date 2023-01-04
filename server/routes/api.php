@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\ManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,5 +51,15 @@ Route::group([
         Route::post('/reset', [UserController::class, 'reset']);
         Route::post('/reset/password/{account}/{token}', [UserController::class, 'resetPassword']);
         Route::post('/upload', [UserController::class, 'upload']);
+    });
+});
+Route::group([
+    'prefix' => 'admin'
+], function () {
+    Route::group([
+        'prefix' => '/user'
+    ], function () {
+        Route::get('', [ManagementController::class, 'userList']);
+        Route::post('/user/{u_id}', [ManagementController::class, 'editUser']);
     });
 });
