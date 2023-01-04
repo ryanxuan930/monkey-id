@@ -23,8 +23,8 @@
         <div class="title">常用信箱(帳號)</div>
         <div class="text-sm text-gray-400 m-1">不一定要學校信箱，建議使用常用信箱</div>
         <input type="email" class="input" placeholder="abc@xyz.com" v-model="data.account" @blur="checkExists">
-        <div class="warning-text" v-if="errorList.account.unique == false">Email已被註冊</div>
-        <div class="warning-text" v-if="errorList.account.format == false">Email格式不正確</div>
+        <div class="warning-text" v-if="errorList.account.unique == false && data.account.length > 0">Email已被註冊</div>
+        <div class="warning-text" v-if="errorList.account.format == false && data.account.length > 0">Email格式不正確</div>
       </label>
       <label class="round-input-label">
         <div class="title">真實姓名</div>
@@ -34,12 +34,12 @@
       <label class="round-input-label">
         <div class="title">密碼</div>
         <input type="password" class="input" placeholder="・・・・・・・・" v-model="data.password">
-        <div class="warning-text" v-if="errorList.password.format == false">密碼須包含大寫、小寫字母與數字，並有8個字元以上</div>
+        <div class="warning-text" v-if="errorList.password.format == false && data.password.length > 0">密碼須包含大寫、小寫字母與數字，並有8個字元以上</div>
       </label>
       <label class="round-input-label">
         <div class="title">確認密碼</div>
         <input type="password" class="input" placeholder="・・・・・・・・" v-model="passwordConfirm">
-        <div class="warning-text" v-if="errorList.password.match == false">兩次密碼不相同</div>
+        <div class="warning-text" v-if="errorList.password.match == false && passwordConfirm.length > 0">兩次密碼不相同</div>
       </label>
       <button class="round-full-button" @click="submitAll">註冊</button>
       <div class="text-sm text-gray-500">當您點下註冊，代表您已同意我們的<a class="hyperlink">隱私權條款</a></div>

@@ -45,6 +45,16 @@ const routes: Array<RouteRecordRaw> = [
         name: 'resetPage',
         component: () => import('../views/login/ResetPage.vue'),
       },
+      {
+        path: 'reset/password/:account/:token',
+        name: 'resetPasswordPage',
+        component: () => import('../views/login/VerifyPage.vue'),
+      },
+      {
+        path: 'admin',
+        name: 'adminLoginPage',
+        component: () => import('../views/login/AdminPage.vue'),
+      },
     ],
   },
   {
@@ -53,9 +63,14 @@ const routes: Array<RouteRecordRaw> = [
     component: AdminView,
     children: [
       {
-        path: 'login',
-        name: 'adminLoginPage',
-        component: () => import('../views/admin/LoginPage.vue'),
+        path: '/admin',
+        name: 'adminHomePage',
+        component: () => import('../views/admin/HomePage.vue'),
+      },
+      {
+        path: '/admin/user',
+        name: 'userListPage',
+        component: () => import('../views/admin/UserPage.vue'),
       },
     ],
   },

@@ -5,6 +5,7 @@ This module is to provide an easy way to fetch data from the server.
 */
 
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 import Config from './vue-request-config';
 
 export default class VueRequest extends Config {
@@ -19,6 +20,10 @@ export default class VueRequest extends Config {
   // eslint-disable-next-line class-methods-use-this
   private ErrHdl(error: any) {
     if (error.response) {
+      if (error.response.data.message === 'Unauthenticated.') {
+        useRouter().push('/login');
+        localStorage.removeItem('monkeyIdTemp');
+      }
       // this.LogError(JSON.stringify(error.response));
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx

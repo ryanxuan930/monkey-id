@@ -59,11 +59,13 @@ export default defineComponent({
           store.commit('setLoginStatus', true);
           store.commit('setUserInfo', res.data.user);
           store.commit('setTokenExpire', res.data.expired);
+          store.commit('setLoginType', 'user');
           const temp = {
             token: res.data.token,
             login: true,
             user: res.data.user,
             expire: res.data.expired,
+            type: 'user',
           };
           localStorage.setItem('monkeyIdTemp', JSON.stringify(temp));
           router.push('/');

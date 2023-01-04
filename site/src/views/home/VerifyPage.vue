@@ -37,10 +37,11 @@
       <div v-if="verifyType == 1">
         <label class="round-input-label">
           <div class="title">選擇文件</div>
-          <input type="file" id="input" class="input" ref="fileElement" @change="upload()">
+          <input type="file" id="input" class="input" ref="fileElement" accept="image/png,image/jpg">
           <div v-if="sizeError" class="text-red-700 text-sm my-1">檔案請小於5MB</div>
         </label>
-        <button class="round-full-button">上傳</button>
+        <button class="round-full-button" @click="upload">上傳</button>
+        <div v-if="message != null" class="text-red-700 text-sm text-left my-1">{{ message }}</div>
         <div class="text-sm text-gray-500">當您點下上傳，代表您已同意我們的<a class="hyperlink">隱私權條款</a></div>
       </div>
     </div>
@@ -54,6 +55,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import type { Ref } from 'vue';
 import VueRequest from '@/vue-request';
+import axios from 'axios';
 
 export default defineComponent({
   setup() {
@@ -89,6 +91,7 @@ export default defineComponent({
     function verifyCode() {
       vr.Post('auth/user/verify/email/code', { code: code.value, prefix: prefix.value }, null, true, true).then((res: {status: string, message?: string}) => {
         if (res.status === 'A04') {
+          message.value = null;
           router.push('/');
         }
         if (res.message !== undefined) {
@@ -115,6 +118,23 @@ export default defineComponent({
           return;
         }
       }
+      const formData = new FormData();
+      formData.append('image', fileElement.value.files[0]);
+      axios.post('https://sports.nsysu.edu.tw/monkeyserver/api/auth/user/upload', formData, {
+        headers: {
+          Authorization: `Bearer ${store.state.token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      }).then((res: any) => {
+        if (res.data.status === 'A05') {
+          alert('上傳成功，請靜候審核');
+          message.value = null;
+          router.push('/');
+        }
+        if (res.data.message !== undefined) {
+          message.value = res.data.message;
+        }
+      });
     }
     return {
       email,

@@ -6,6 +6,7 @@ export default createStore({
     isLogin: false,
     userInfo: {},
     tokenExpire: '',
+    loginType: '',
   },
   getters: {
   },
@@ -22,11 +23,15 @@ export default createStore({
     setTokenExpire(state, tokenExpire: string) {
       state.tokenExpire = tokenExpire;
     },
+    setLoginType(state, loginType: string) {
+      state.tokenExpire = loginType;
+    },
     reset(state) {
       state.token = '';
       state.isLogin = false;
       state.userInfo = {};
       state.tokenExpire = '';
+      state.loginType = '';
     },
   },
   actions: {

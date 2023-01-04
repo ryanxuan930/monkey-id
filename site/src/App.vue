@@ -23,6 +23,8 @@ export default defineComponent({
         store.commit('setAuthToken', temp.token);
         store.commit('setLoginStatus', temp.login);
         store.commit('setUserInfo', temp.user);
+        store.commit('setTokenExpire', temp.expire);
+        store.commit('setLoginType', temp.type);
       }
     } catch (e) {
       console.log(e);

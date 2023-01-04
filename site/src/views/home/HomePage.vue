@@ -13,6 +13,7 @@
           <template v-if="data.verification == 1 || data.verification == 3">
             <div class="text-2xl font-medium text-orange-600">審核中</div>
             <div class="text-lg text-gray-500">{{ statusList[data.verification] }}</div>
+            <button class="round-full-button" @click="$router.push('verify')">重新驗證</button>
           </template>
           <template v-if="data.verification == 2 || (data.verification > 3 && data.verification < 9)">
             <div class="text-2xl font-medium text-red-700">審核未通過</div>
@@ -45,6 +46,7 @@ export default defineComponent({
     const data: any = ref({});
 
     function logout() {
+      vr.Post('auth/user/logout', null);
       store.commit('reset');
       try {
         if (localStorage.getItem('monkeyIdTemp')) {

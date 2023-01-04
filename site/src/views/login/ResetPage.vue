@@ -10,7 +10,7 @@
         <div v-if="message != null" class="text-red-700 text-sm my-1 text-left">{{ message }}</div>
         <button class="round-full-button" @click="submitAll">重設密碼</button>
         <hr class="my-3">
-        <div class="text-lg text-gray-500">返回<router-link to="login" class="hyperlink"></router-link></div>
+        <div class="text-lg text-gray-500">返回<router-link to="/login" class="hyperlink">登入</router-link></div>
       </div>
       <div class="flex-grow"></div>
     </div>
@@ -37,6 +37,7 @@ export default defineComponent({
       function submitAll() {
         vr.Post('auth/user/reset', data).then((res: IResetResponse) => {
           if (res.status === 'A01') {
+            alert('發送成功');
             router.push('/login');
           }
           if (res.message !== undefined) {
