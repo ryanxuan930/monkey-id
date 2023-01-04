@@ -23,7 +23,7 @@ class UserController extends Controller
     // construct
     public function __construct()
     {
-        $this->middleware('auth:user',['except'=>['login','register','exist', 'reset', 'resetPassword']]);
+        $this->middleware('auth:user',['except'=>['login','register','exist', 'reset', 'resetPassword', 'logout']]);
     }
 
     // token function

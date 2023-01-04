@@ -22,16 +22,14 @@ Route::get('/univ-list', [MainController::class, 'univList']);
 Route::group([
     'prefix' => 'auth'
 ], function () {
-    //admin
-    /*
+    // admin
     Route::group([
         'prefix' => '/admin'
     ], function () {
         Route::post('/login', [AdminController::class, 'login']);
         Route::get('/info', [AdminController::class, 'info']);
         Route::post('/logout', [AdminController::class, 'logout']);
-        Route::post('/change-password', [AdminController::class, 'changePassword']);
-    });*/
+    });
     
     //user
     Route::group([
