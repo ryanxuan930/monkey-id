@@ -32,6 +32,54 @@ class ManagementController extends Controller
     }
     public function editUser(Request $request, $u_id)
     {
-
+        $validator = Validator::make($request->all(),[
+            'u_id' => 'required|exists:user,u_id',
+            'account' => 'required|unique:user,account',
+            'name' => 'required',
+            'univ_id' => 'required|size:5',
+            'verify_type' => 'required|integer',
+            'identity' => 'required|integer',
+            'verification' => 'required|integer',
+            'valid_until' => 'required|date',
+            'remarks' => 'string|nullable',
+        ]);
+        if ($validator->fails()) {
+            $failedRules = $validator->failed();
+            if (isset($failedRules['u_id']['Required'])) {
+                return response()->json(['status' => 'U07', 'field' => 'u_id'], 200);
+            } else if (isset($failedRules['u_id']['Exists'])) {
+                return response()->json(['status' => 'U01', 'field' => 'u_id'], 200);
+            } else if (isset($failedRules['account']['Required'])) {
+                return response()->json(['status' => 'U03'], 200);
+            } else if (isset($failedRules['account']['Unique'])) {
+                return response()->json(['status' => 'U04'], 200);
+            } else if (isset($failedRules['name']['Required'])) {
+                return response()->json(['status' => 'U07', 'field' => 'name'], 200);
+            } else if (isset($failedRules['univ_id']['Required'])) {
+                return response()->json(['status' => 'U07', 'field' => 'univ_id'], 200);
+            } else if (isset($failedRules['univ_id']['Size'])) {
+                return response()->json(['status' => 'U01', 'field' => 'univ_id'], 200);
+            } else if (isset($failedRules['identity']['Required'])) {
+                return response()->json(['status' => 'U07', 'field' => 'identity'], 200);
+            } else if (isset($failedRules['identity']['Integer'])) {
+                return response()->json(['status' => 'U08', 'field' => 'identity'], 200);
+            } else if (isset($failedRules['verify_type']['Required'])) {
+                return response()->json(['status' => 'U07', 'field' => 'verify_type'], 200);
+            } else if (isset($failedRules['verify_type']['Integer'])) {
+                return response()->json(['status' => 'U08', 'field' => 'verify_type'], 200);
+            } else if (isset($failedRules['verification']['Required'])) {
+                return response()->json(['status' => 'U07', 'field' => 'verification'], 200);
+            } else if (isset($failedRules['verification']['Integer'])) {
+                return response()->json(['status' => 'U08', 'field' => 'verification'], 200);
+            } else if (isset($failedRules['valid_until']['Required'])) {
+                return response()->json(['status' => 'U07', 'field' => 'valid_until'], 200);
+            } else if (isset($failedRules['valid_until']['Date'])) {
+                return response()->json(['status' => 'U08', 'field' => 'valid_until'], 200);
+            }
+            return response()->json($validator->errors(), 400);
+        }
+        $temp = $request->all();
+        User::where('u_id',$u_id)->update($temp);
+        return response()->json(['status'=>'A01']);
     }
 }

@@ -61,6 +61,6 @@ Route::group([
     ], function () {
         Route::get('', [ManagementController::class, 'userList']);
         Route::get('/{u_id}', [ManagementController::class, 'userData']);
-        Route::post('/user/{u_id}', [ManagementController::class, 'editUser']);
+        Route::patch('/edit', [ManagementController::class, 'editUser']);
     });
 });
