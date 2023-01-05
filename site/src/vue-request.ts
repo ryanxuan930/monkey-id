@@ -16,12 +16,14 @@ export default class VueRequest extends Config {
     }
   }
 
+  private router = useRouter();
+
   // error handler
   // eslint-disable-next-line class-methods-use-this
   private ErrHdl(error: any) {
     if (error.response) {
       if (error.response.data.message === 'Unauthenticated.') {
-        useRouter().push('/login');
+        this.router.push('/login');
         localStorage.removeItem('monkeyIdTemp');
       }
       // this.LogError(JSON.stringify(error.response));

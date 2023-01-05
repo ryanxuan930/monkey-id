@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import AdminView from '../views/AdminView.vue';
 
@@ -72,12 +72,17 @@ const routes: Array<RouteRecordRaw> = [
         name: 'userListPage',
         component: () => import('../views/admin/UserPage.vue'),
       },
+      {
+        path: '/admin/user/:id',
+        name: 'userDataPage',
+        component: () => import('../views/admin/VerifyPage.vue'),
+      },
     ],
   },
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(process.env.BASE_URL),
   routes,
 });
 
