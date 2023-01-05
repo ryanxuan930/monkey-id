@@ -30,7 +30,7 @@ class ManagementController extends Controller
         $result = User::leftJoin('univ_list', 'univ_list.univ_id', '=', 'user.univ_id')->select('user.*', 'univ_list.univ_id', 'univ_list.univ_name_ch_full', 'univ_list.univ_name_ch', 'univ_list.univ_name_en')->where('u_id', $u_id)->first();
         return response()->json($result);
     }
-    public function editUser(Request $request, $u_id)
+    public function editUser(Request $request)
     {
         $validator = Validator::make($request->all(),[
             'u_id' => 'required|exists:user,u_id',
@@ -79,6 +79,8 @@ class ManagementController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $temp = $request->all();
+        $u_id = $temp['u_id'];
+        unset($temp['u_id']);
         User::where('u_id',$u_id)->update($temp);
         return response()->json(['status'=>'A01']);
     }
