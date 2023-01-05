@@ -34,7 +34,7 @@ class ManagementController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'u_id' => 'required|exists:user,u_id',
-            'account' => 'required|unique:user,account',
+            'account' => 'required',
             'name' => 'required',
             'univ_id' => 'required|size:5',
             'verify_type' => 'required|integer',
@@ -51,8 +51,6 @@ class ManagementController extends Controller
                 return response()->json(['status' => 'U01', 'field' => 'u_id'], 200);
             } else if (isset($failedRules['account']['Required'])) {
                 return response()->json(['status' => 'U03'], 200);
-            } else if (isset($failedRules['account']['Unique'])) {
-                return response()->json(['status' => 'U04'], 200);
             } else if (isset($failedRules['name']['Required'])) {
                 return response()->json(['status' => 'U07', 'field' => 'name'], 200);
             } else if (isset($failedRules['univ_id']['Required'])) {
