@@ -19,6 +19,7 @@ use App\Http\Controllers\ManagementController;
 */
 
 Route::get('/univ-list', [MainController::class, 'univList']);
+Route::post('/app/login/{key}', [MainController::class, 'login']);
 
 Route::group([
     'prefix' => 'auth'
@@ -53,6 +54,7 @@ Route::group([
         Route::post('/upload', [UserController::class, 'upload']);
     });
 });
+
 Route::group([
     'prefix' => 'admin'
 ], function () {
