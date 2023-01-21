@@ -63,7 +63,7 @@ class MainController extends Controller
             }
         }
 
-        if($token = auth('user')->attempt($validator->validated())){
+        if($token = auth('user')->attempt($temp)){
             $user = User::find(auth('user')->user()->id);
             $user->last_login = $loginTime;
             $user->last_ip = $request->origin_ip;
