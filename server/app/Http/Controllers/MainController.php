@@ -62,7 +62,7 @@ class MainController extends Controller
                 ];
             }
         }
-
+        $loginTime = date("Y-m-d H:i:s");
         if($token = auth('user')->attempt($temp)){
             $user = User::find(auth('user')->user()->id);
             $user->last_login = $loginTime;
