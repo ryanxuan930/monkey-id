@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ManagementController;
+use App\Http\Controllers\InterfaceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,4 +66,5 @@ Route::group([
         Route::get('/{u_id}', [ManagementController::class, 'userData']);
         Route::patch('/edit', [ManagementController::class, 'editUser']);
     });
+    Route::apiResource('/app', InterfaceController::class);
 });
