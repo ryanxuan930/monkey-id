@@ -40,7 +40,7 @@ class MainController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $temp = $request->all();
-        $ip = $temp['origin_ip'];
+        $ip = $request->all()->origin_ip;
         unset($temp['origin_ip']);
         function returnData ($user) {
             $now = new DateTime('now');
