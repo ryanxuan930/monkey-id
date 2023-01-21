@@ -25,8 +25,7 @@ class MainController extends Controller
         }
         $validator = Validator::make($request->all(),[
             'account' => 'required|exists:user,account',
-            'password' => 'required',
-            'origin_ip' => 'required'
+            'password' => 'required'
         ]);
         if ($validator->fails()) {
             $failedRules = $validator->failed();
@@ -39,9 +38,6 @@ class MainController extends Controller
             }
             return response()->json($validator->errors(), 400);
         }
-        $temp = $request->all();
-        $ip = $request->all()->origin_ip;
-        unset($temp['origin_ip']);
         function returnData ($user) {
             $now = new DateTime('now');
             $valid = new DateTime($user->valid_until);
@@ -53,7 +49,6 @@ class MainController extends Controller
                     'name' => $user->name,
                     'user_identity' => $user->identity,
                     'org_id' => $user->univ_id,
-                    'ip' => $ip,
                 ];
             } else {
                 return [
@@ -62,8 +57,8 @@ class MainController extends Controller
                 ];
             }
         }
-        $loginTime = date("Y-m-d H:i:s");
-        if($token = auth('user')->attempt($temp)){
+
+        if($token = auth('user')->attempt($validator->validated())){
             $user = User::find(auth('user')->user()->id);
             $user->last_login = $loginTime;
             $user->last_ip = $request->origin_ip;
