@@ -61,7 +61,7 @@ class MainController extends Controller
         if($token = auth('user')->attempt($validator->validated())){
             $user = User::find(auth('user')->user()->id);
             $user->last_login = $loginTime;
-            $user->last_ip = $request->origin_ip;
+            $user->last_ip = $request->ip();
             $user->save();
             auth('user')->setUser($user);
             return response()->json(returnData($user), 200);
