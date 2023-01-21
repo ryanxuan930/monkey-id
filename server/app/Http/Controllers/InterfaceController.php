@@ -47,7 +47,7 @@ class InterfaceController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $temp = $request->all();
-        $temp['app_key'] = hash('sha3-224', microtime(true).$temp['app_name'].$temp['domain']);
+        $temp['app_key'] = hash('sha3-256', microtime(true).$temp['app_name'].$temp['domain']);
         ServiceList::insert($temp);
         return response()->json(['status'=>'A01']);
     }

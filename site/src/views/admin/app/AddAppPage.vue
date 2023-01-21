@@ -42,9 +42,9 @@ export default defineComponent({
       message?: string,
     }
     function submitAll() {
-      vr.Patch('admin/user/edit', data, null, true, true).then((res: IEditResponse) => {
+      vr.Post('admin/app', data, null, true, true).then((res: IEditResponse) => {
         if (res.status === 'A01') {
-          router.push('/admin/app');
+          alert('已新增');
         }
       });
     }

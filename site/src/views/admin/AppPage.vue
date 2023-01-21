@@ -26,7 +26,7 @@
             <th>網域</th>
             <th>App Key</th>
             <th>
-              <router-link to="/admin/app/add">新增</router-link>
+              <router-link class="text-orange-400" to="/admin/app/add">新增</router-link>
             </th>
           </tr>
           <template v-for="(item, index) in appList" :key="index">
