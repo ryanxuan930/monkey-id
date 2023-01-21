@@ -39,8 +39,9 @@ class MainController extends Controller
             }
             return response()->json($validator->errors(), 400);
         }
-        $loginTime = date("Y-m-d H:i:s");
-
+        $temp = $request->all();
+        $ip = $temp['origin_ip'];
+        unset($temp['origin_ip']);
         function returnData ($user) {
             $now = new DateTime('now');
             $valid = new DateTime($user->valid_until);
@@ -51,7 +52,8 @@ class MainController extends Controller
                     'monkey_user_id' => $user->u_id,
                     'name' => $user->name,
                     'user_identity' => $user->identity,
-                    'org_id' => $user->univ_id
+                    'org_id' => $user->univ_id,
+                    'ip' => $ip,
                 ];
             } else {
                 return [
