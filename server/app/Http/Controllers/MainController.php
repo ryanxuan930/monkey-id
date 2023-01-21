@@ -20,7 +20,7 @@ class MainController extends Controller
     public function login(Request $request, $key)
     {
         $appData = ServiceList::where('domain', $request->getHttpHost())->where('app_key', $key)->first();
-        if (is_null($result)) {
+        if (is_null($appData)) {
             return response()->json(['status' => "E03", 'message' => 'app key not found'], 200);
         }
         $validator = Validator::make($request->all(),[
