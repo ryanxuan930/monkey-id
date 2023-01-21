@@ -38,8 +38,8 @@
               <label class="data-input">
                 <div>方式：</div>
                 <select v-model="userData.verify_type" :disabled="!edit">
-                  <option value="1">學校Email信箱驗證</option>
-                  <option value="2">上傳證明文件</option>
+                  <option value="0">學校Email信箱驗證</option>
+                  <option value="1">上傳證明文件</option>
                 </select>
               </label>
             </div>

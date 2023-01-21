@@ -77,6 +77,16 @@ const routes: Array<RouteRecordRaw> = [
         name: 'userDataPage',
         component: () => import('../views/admin/VerifyPage.vue'),
       },
+      {
+        path: '/admin/app',
+        name: 'appListPage',
+        component: () => import('../views/admin/AppPage.vue'),
+      },
+      {
+        path: '/admin/app/add',
+        name: 'addAppPage',
+        component: () => import('../views/admin/app/AddAppPage.vue'),
+      },
     ],
   },
 ];

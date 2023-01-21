@@ -1,7 +1,7 @@
 <template>
     <div class="bg-orange-50 h-screen flex flex-col overflow-auto">
-      <div class="flex-grow min-h-[1em]"></div>
-      <div class="bg-white sm:shadow p-5 w-full h-screen sm:w-2/3 md:w-96 sm:h-fit mx-auto text-gray-600 text-left">
+      <div class="flex-grow sm:min-h-[1em]"></div>
+      <div class="bg-white sm:shadow p-8 sm:p-5 w-full h-screen sm:w-2/3 md:w-96 sm:h-fit mx-auto text-gray-600 text-left">
         <div class="text-4xl font-medium mb-1">{{ data.name }}</div>
         <div class="text-lg text-gray-500">{{ data.univ_name_ch_full }}</div>
         <div class="text-lg text-gray-500">{{ identityList[data.identity] }}</div>
@@ -28,7 +28,7 @@
         </div>
         <button class="round-full-button" @click="logout">登出</button>
       </div>
-      <div class="flex-grow min-h-[1em]"></div>
+      <div class="flex-grow sm:min-h-[1em]"></div>
     </div>
   </template>
 
