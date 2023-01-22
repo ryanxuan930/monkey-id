@@ -48,7 +48,7 @@ class MainController extends Controller
                     'monkey_user_id' => $user->u_id,
                     'name' => $user->name,
                     'user_identity' => $user->identity,
-                    'org_id' => $user->univ_id,
+                    'org_code' => $user->univ_id,
                 ];
             } else {
                 return [
