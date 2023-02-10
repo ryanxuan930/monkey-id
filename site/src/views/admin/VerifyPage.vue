@@ -109,7 +109,9 @@ export default defineComponent({
       file: '',
     });
     function getUserData() {
-      vr.Get(`admin/user/${route.params.id}`, userData, true, true);
+      vr.Get(`admin/user/${route.params.id}`, userData, true, true).then(() => {
+        status.value = userData.value.verification;
+      });
     }
     getUserData();
     // univ list

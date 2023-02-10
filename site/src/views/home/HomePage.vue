@@ -10,17 +10,17 @@
             <div class="text-2xl font-medium text-gray-700">尚未驗證</div>
             <button class="round-full-button" @click="$router.push('verify')">立即驗證</button>
           </template>
-          <template v-if="data.verification == 1 || data.verification == 3">
+          <template v-else-if="data.verification == 1 || data.verification == 3">
             <div class="text-2xl font-medium text-orange-600">審核中</div>
             <div class="text-lg text-gray-500">{{ statusList[data.verification] }}</div>
             <button class="round-full-button" @click="$router.push('verify')">重新驗證</button>
           </template>
-          <template v-if="data.verification == 2 || (data.verification > 3 && data.verification < 9)">
+          <template v-else-if="data.verification == 2 || (data.verification > 3 && data.verification < 9)">
             <div class="text-2xl font-medium text-red-700">審核未通過</div>
             <div class="text-lg text-gray-500">{{ statusList[data.verification] }}</div>
             <button class="round-full-button" @click="$router.push('verify')">重新驗證</button>
           </template>
-          <template v-if="data.verification == 9">
+          <template v-else-if="data.verification == 9">
             <div class="text-2xl font-medium text-green-700">身份有效</div>
             <div class="text-lg text-gray-500">有效期限：{{ data.valid_until }}</div>
             <button class="round-full-button" @click="$router.push('verify')">重新驗證</button>
@@ -33,13 +33,13 @@
   </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
+import { defineComponent, ref } from 'vue';
 import VueRequest from '@/vue-request';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
-  setup(props) {
+  setup() {
     const store = useStore();
     const router = useRouter();
     const vr = new VueRequest(store.state.token);

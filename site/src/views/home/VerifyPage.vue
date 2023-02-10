@@ -26,6 +26,7 @@
           <span v-else-if="sendCodeStatus === true && countdown > 0">{{ countdown }}秒後可發送</span>
           <span v-else>重新傳送</span>
         </button>
+        <div v-show="isLoading">傳輸中...</div>
         <div v-if="sendCodeStatus === true" class="flex text-xl text-gray-500 items-center w-full flex-nowrap box-border">
           <div class="whitespace-nowrap">{{ prefix }} -</div>
           <input type="text" maxlength="6" class="block border-2 py-1 px-5 w-full ml-2 rounded-full flex-grow" v-model="code" @keyup.enter="verifyCode">
@@ -41,8 +42,9 @@
           <div v-if="sizeError" class="text-red-700 text-sm my-1">檔案請小於5MB</div>
         </label>
         <button class="round-full-button" @click="upload">上傳</button>
+        <div v-show="isLoading">傳輸中...</div>
         <div v-if="message != null" class="text-red-700 text-sm text-left my-1">{{ message }}</div>
-        <div class="text-sm text-gray-500">當您點下上傳，代表您已同意我們的<a class="hyperlink">隱私權條款</a></div>
+        <div class="text-sm text-gray-500">當您點下上傳，代表您已同意我們的<router-link class="hyperlink" target="_blank" to="/privacy">隱私權條款</router-link></div>
       </div>
     </div>
     <div class="flex-grow sm:min-h-[1em]"></div>
@@ -69,9 +71,11 @@ export default defineComponent({
     const sendCodeStatus = ref(false);
     const countdown = ref(0);
     const message: Ref<string|null> = ref(null);
+    const isLoading = ref(false);
     let readyToSent = true;
     function sendVerifyCode() {
       if (readyToSent) {
+        isLoading.value = true;
         readyToSent = false;
         countdown.value = 60;
         vr.Post('auth/user/verify/email', { email: email.value }, null, true, true).then((res: {status: string, prefix?: string, message?: string}) => {
@@ -83,6 +87,7 @@ export default defineComponent({
           if (res.message !== undefined) {
             message.value = res.message;
           }
+          isLoading.value = false;
         });
       }
     }
@@ -118,6 +123,7 @@ export default defineComponent({
           return;
         }
       }
+      isLoading.value = true;
       const formData = new FormData();
       formData.append('image', fileElement.value.files[0]);
       axios.post('https://sports.nsysu.edu.tw/monkeyserver/api/auth/user/upload', formData, {
@@ -134,6 +140,7 @@ export default defineComponent({
         if (res.data.message !== undefined) {
           message.value = res.data.message;
         }
+        isLoading.value = false;
       });
     }
     return {
@@ -149,6 +156,7 @@ export default defineComponent({
       message,
       code,
       verifyCode,
+      isLoading,
     };
   },
 });

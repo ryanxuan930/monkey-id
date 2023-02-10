@@ -42,7 +42,7 @@
         <div class="warning-text" v-if="errorList.password.match == false && passwordConfirm.length > 0">兩次密碼不相同</div>
       </label>
       <button class="round-full-button" @click="submitAll">註冊</button>
-      <div class="text-sm text-gray-500">當您點下註冊，代表您已同意我們的<a class="hyperlink">隱私權條款</a></div>
+      <div class="text-sm text-gray-500">當您點下註冊，代表您已同意我們的<router-link class="hyperlink" target="_blank" to="/privacy">隱私權條款</router-link></div>
       <hr class="my-3">
       <div class="text-lg text-gray-500">已經有帳號了？<router-link to="/login" class="hyperlink">點我登入</router-link>吧！</div>
     </div>
@@ -61,6 +61,7 @@ import VueRequest from '@/vue-request';
 export default defineComponent({
   setup() {
     const vr = new VueRequest();
+    const router = useRouter();
     // university list
     interface IUnivList {
       univ_id: string,
@@ -82,7 +83,7 @@ export default defineComponent({
       password: '',
     });
     const passwordConfirm = ref('');
-    const errorList = reactive({
+    const errorList: any = reactive({
       account: {
         filled: false,
         format: false,
@@ -124,7 +125,7 @@ export default defineComponent({
     function submitAll() {
       checkExists();
       let flag = true;
-      Object.values(errorList).forEach((item) => {
+      Object.values(errorList).forEach((item: any) => {
         Object.values(item).forEach((value) => {
           if (!value) {
             flag = false;
@@ -145,7 +146,7 @@ export default defineComponent({
       }
       vr.Post('auth/user/register', data).then((res: IRegisterResponse) => {
         if (res.status === 'A01') {
-          useRouter().push('/login/done');
+          router.push('/login/done');
         }
       });
     }

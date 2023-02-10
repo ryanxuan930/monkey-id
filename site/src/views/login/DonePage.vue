@@ -8,15 +8,3 @@
     <div class="flex-grow min-h-[2em]"></div>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  setup() {
-    return {
-
-    };
-  },
-});
-</script>
