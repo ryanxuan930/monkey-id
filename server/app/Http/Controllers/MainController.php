@@ -19,7 +19,7 @@ class MainController extends Controller
     }
     public function login(Request $request, $key)
     {
-        $appData = ServiceList::where('domain', $request->getHttpHost())->where('app_key', $key)->first();
+        $appData = ServiceList::where('app_key', $key)->first();
         if (is_null($appData)) {
             return response()->json(['status' => "E03", 'message' => 'app key not found'], 200);
         }
