@@ -81,7 +81,7 @@ class UserController extends Controller
         $user = auth()->user();
         $validTime = new DateTime($user->valid_until);
         $current = new DateTime;
-        if ($validTime < $current) {
+        if ($validTime < $current && $user->verification == 9) {
             User::where('u_id',$user->u_id)->update(['verification' => 8]);
         }
         $result = User::leftJoin('univ_list', 'univ_list.univ_id', '=', 'user.univ_id')->select('user.*', 'univ_list.univ_id', 'univ_list.univ_name_ch_full', 'univ_list.univ_name_ch', 'univ_list.univ_name_en')->where('u_id',$user->u_id)->first();
