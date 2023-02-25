@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-orange-50 h-screen flex flex-col overflow-auto">
+  <div class="bg-orange-50 h-full md:h-screen flex flex-col overflow-auto">
     <div class="flex-grow sm:min-h-[1em]"></div>
-    <div class="bg-white sm:shadow p-5 w-full h-screen sm:w-2/3 md:w-96 sm:h-fit mx-auto">
+    <div class="bg-white sm:shadow p-5 w-full sm:w-2/3 md:w-96 sm:h-fit mx-auto">
       <div class="text-left">
         <router-link class="text-lg hyperlink" to="/">回上一頁</router-link>
       </div>

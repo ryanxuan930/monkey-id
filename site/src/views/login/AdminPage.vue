@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-orange-50 h-screen flex flex-col overflow-auto">
+  <div class="bg-orange-50 h-full md:h-screen flex flex-col overflow-auto">
     <div class="flex-grow"></div>
-    <div class="bg-white sm:shadow p-5 w-full h-screen sm:w-2/3 md:w-96 sm:h-fit mx-auto">
+    <div class="bg-white sm:shadow p-5 w-full sm:w-2/3 md:w-96 sm:h-fit mx-auto">
       <img src="@/assets/monkey_id.svg" alt="monkey id" class="inline-block w-full m-auto max-h-24 p-0" >
       <div class="text-2xl text-gray-500">管理員登入</div>
       <label class="round-input-label">
